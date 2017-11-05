@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {RecipeModel} from '../recipe.model';
 import {RecipesService} from '../recipes.service';
+import {ActivatedRoute, Router, RouterLinkActive} from '@angular/router';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -9,14 +10,29 @@ import {RecipesService} from '../recipes.service';
 })
 export class RecipeDetailComponent implements OnInit
 {
-  @Input() recipe: RecipeModel;
+  recipe: RecipeModel;
 
-  constructor(private recipeService: RecipesService)
+  constructor(private recipeService: RecipesService,
+              private activeRoute: ActivatedRoute,
+              private router: Router)
   {
+
   }
 
   ngOnInit()
   {
+    this.activeRoute.params.subscribe(params => {
+      const recipeId = params['id'] ? params['id'] : 1;
+      const recipeFound = this.recipeService.findRecipeById(recipeId);
+      if (recipeFound)
+      {
+        this.recipe = recipeFound;
+      }
+      else
+      {
+        this.router.navigate(['/not-found']);
+      }
+    });
   }
 
   onAddToShoppingList()

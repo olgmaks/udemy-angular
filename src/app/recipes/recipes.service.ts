@@ -14,6 +14,7 @@ export class RecipesService
 
   private recipeList: RecipeModel[] = [
     new RecipeModel(
+      1,
       'Test Recipe', 'Test Recipe Description',
       'http://food.fnr.sndimg.com/content/dam/images/food/fullset/2012/2/1/0/WU0202_chili_s3x4.jpg.rend.hgtvcom.616.462.suffix/1486076474733.jpeg',
       [
@@ -22,6 +23,7 @@ export class RecipesService
       ]
     ),
     new RecipeModel(
+      2,
       'French Potato',
       'Fried Potato with a cheese',
       'http://food.fnr.sndimg.com/content/dam/images/food/fullset/2013/6/13/0/YW0301H_twice-baked-potatoes-recipe_s4x3.jpg.rend.hgtvcom.616.462.suffix/1406091903572.jpeg',
@@ -39,6 +41,11 @@ export class RecipesService
   addIngredientsToShoppingList(ingredients: IngredientModel[])
   {
     this.shoppingListService.addIngredients(ingredients);
+  }
+
+  findRecipeById(id: number): RecipeModel
+  {
+    return this.getRecipes().find(r => +r.id === +id);
   }
 }
 
