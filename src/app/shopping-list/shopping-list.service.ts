@@ -1,5 +1,5 @@
 import {IngredientModel} from '../shared/ingredient.model';
-import {EventEmitter} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
 
 export class ShoppingListService
 {
@@ -8,7 +8,8 @@ export class ShoppingListService
     new IngredientModel('Banana', 10)
   ];
 
-  ingredientsChangeEventEmitter = new EventEmitter<IngredientModel[]>();
+  ingredientsChangeSubject = new Subject<IngredientModel[]>();
+  startedEditingSubject = new Subject<number>();
 
   getIngredients(): IngredientModel[]
   {
@@ -19,38 +20,41 @@ export class ShoppingListService
   {
     const updateIngredient = shoppingListUpdate.ingredient;
 
-    if (updateIngredient.name.length > 0 && updateIngredient.amount)
+    if (updateIngredient)
     {
-      const existingIngredient = this.ingredients.find(i => i.name === updateIngredient.name);
-
-      if (shoppingListUpdate.type === 'add')
+      if (updateIngredient.name && updateIngredient.name.length > 0 && updateIngredient.amount)
       {
-        if (existingIngredient)
-        {
-          existingIngredient.amount = +existingIngredient.amount + +updateIngredient.amount;
-        }
-        else
-        {
-          this.ingredients.push(updateIngredient);
-        }
-      }
+        const existingIngredient = this.ingredients.find(i => i.name === updateIngredient.name);
 
-      if (shoppingListUpdate.type === 'delete')
-      {
-        if (existingIngredient)
+        if (shoppingListUpdate.type === 'add')
         {
-          existingIngredient.amount = +existingIngredient.amount - +updateIngredient.amount;
-
-          if (existingIngredient.amount <= 0)
+          if (existingIngredient)
           {
-            const index = this.ingredients.findIndex(i => i.name === updateIngredient.name);
-
-            this.ingredients.splice(index, 1);
+            existingIngredient.amount = +existingIngredient.amount + +updateIngredient.amount;
+          }
+          else
+          {
+            this.ingredients.push(updateIngredient);
           }
         }
-      }
 
-      this.ingredientsChangeEventEmitter.emit(this.getIngredients());
+        if (shoppingListUpdate.type === 'delete')
+        {
+          if (existingIngredient)
+          {
+            existingIngredient.amount = +existingIngredient.amount - +updateIngredient.amount;
+
+            if (existingIngredient.amount <= 0)
+            {
+              const index = this.ingredients.findIndex(i => i.name === updateIngredient.name);
+
+              this.ingredients.splice(index, 1);
+            }
+          }
+        }
+
+        this.ingredientsChangeSubject.next(this.getIngredients());
+      }
     }
   }
 

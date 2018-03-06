@@ -1,16 +1,25 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import * as firebase from 'firebase';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent
+export class AppComponent implements OnInit
 {
   currentRoute = 'recipes';
 
   onRouteSelected(routeEventData)
   {
     this.currentRoute = routeEventData.route;
+  }
+
+  ngOnInit()
+  {
+    firebase.initializeApp({
+      apiKey: 'AIzaSyDqAO5r2ZZt1BqKrhOwhFrO-kfgTkjWxNg',
+      authDomain: 'om-recipe-book.firebaseapp.com'
+    });
   }
 }

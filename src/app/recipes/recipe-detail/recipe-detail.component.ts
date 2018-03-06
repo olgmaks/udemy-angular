@@ -22,15 +22,19 @@ export class RecipeDetailComponent implements OnInit
   ngOnInit()
   {
     this.activeRoute.params.subscribe(params => {
-      const recipeId = params['id'] ? params['id'] : 1;
-      const recipeFound = this.recipeService.findRecipeById(recipeId);
-      if (recipeFound)
+
+      const recipeId = params['id'];
+      if (recipeId)
       {
-        this.recipe = recipeFound;
-      }
-      else
-      {
-        this.router.navigate(['/not-found']);
+        const recipeFound = this.recipeService.findRecipeById(recipeId);
+        if (recipeFound)
+        {
+          this.recipe = recipeFound;
+        }
+        else
+        {
+          this.router.navigate(['/not-found']);
+        }
       }
     });
   }
@@ -38,5 +42,11 @@ export class RecipeDetailComponent implements OnInit
   onAddToShoppingList()
   {
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+  }
+
+  onDeleteRecipe()
+  {
+    this.recipeService.deleteRecipe(this.recipe.id);
+    this.router.navigate(['/recipes']);
   }
 }

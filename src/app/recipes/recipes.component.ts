@@ -10,19 +10,12 @@ import {RecipesService} from "./recipes.service";
 export class RecipesComponent implements OnInit
 {
 
-  recipeDetail: RecipeModel;
-
   constructor(private recipeService: RecipesService)
   {
   }
 
   ngOnInit()
   {
-    this.recipeDetail = this.recipeService.getRecipes()[0];
 
-    this.recipeService.recipeItemSelectedEventEmitter
-        .subscribe(ri => {
-          this.recipeDetail = ri;
-        });
   }
 }

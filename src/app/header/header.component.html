@@ -3,7 +3,7 @@
   <div class="container-fluid">
 
     <div class="navbar-header col-xs-12">
-      <a href="#" class="navbar-brand">
+      <a routerLink="/" class="navbar-brand">
         Recipe Book
       </a>
       <div class="collapse navbar-collapse">
@@ -16,14 +16,30 @@
           </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li class="dropdown" appDropdown>
+          <ng-template [ngIf]="!authService.isAuthenticated()">
+            <li>
+              <a routerLink="/signin">Login</a>
+            </li>
+            <li>
+              <a routerLink="/signup">Register</a>
+            </li>
+          </ng-template>
+
+          <li>
+            <a (click)="onLogout()" *ngIf="authService.isAuthenticated()">Logout</a>
+          </li>
+          <li class="dropdown" *ngIf="authService.isAuthenticated()" appDropdown>
             <a class="dropdown-toggle" role="button" style="cursor: pointer">Manage <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li>
-                <a style="cursor: pointer">Save Data</a>
+                <a
+                  style="cursor: pointer"
+                  (click)="onSaveData()">Save Data</a>
               </li>
               <li>
-                <a style="cursor: pointer">Fetch Data</a>
+                <a
+                  style="cursor: pointer"
+                  (click)="onFetchData()">Fetch Data</a>
               </li>
             </ul>
           </li>
